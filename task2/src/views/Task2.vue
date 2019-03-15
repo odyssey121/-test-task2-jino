@@ -19,11 +19,11 @@
         </div>
         <div v-for="(file,index) in files" :key="index">
           <wait v-show="file.processing"
-          :file="file.name"/>
+          :filename="file.name" :size="file.size"
+          :accepted="file.accepted" />
           <loaded v-show="!file.processing"
-          :file="file.name" />
-
-        
+          :filename="file.name" :size="file.size"
+          :accepted="file.accepted" />
       </div>
     </div>
   </div>
@@ -38,32 +38,29 @@ import shortid from "shortid";
 import { close } from 'fs';
 
 export default {
-  props:{
-  
-  },
+  name: 'Task2',
   components:{
     wait,
     loaded,
   },
-  name: 'Task2',
+  
   data () {
     return {
-      files:[],
-      processing:true,
-    	
+      files:[]
     }
   },
   methods:{
   	upload(e){
+        const repeat = e.target.files;
         const id = shortid();
         const filename = e.target.files[0].name;
-        const size = `${e.target.files[0].size} Кб`;
+        const size = `(${e.target.files[0].size} Кб)`;
         this.files.push({
           id,
           'name':filename,
           'size':size,
           'processing':true,
-          'accepted': Math.round(Math.random() * 11) < 5 ? true : false,
+          'accepted': 'Идёт Проверка...'
         });
         setTimeout(() => {
           this.load(id);
@@ -73,9 +70,18 @@ export default {
       this.files.forEach(file => {
         if(file.id === id)  {file.processing = false;}
       });
+      setTimeout(() => {
+        this.verification(id);
+      },5000);
+    },
+    verification(id){
+      this.files.forEach(file => {
+        if(file.id === id) {
+          file.accepted = Math.round(Math.random() * 11) < 5 ? "Принято" : "Отклонено";
+          }
+      });
     }
-  },
-  
+  }
 }
 </script>
 
@@ -98,7 +104,7 @@ export default {
   display: grid;
   grid-template-columns: repeat(12, 1fr);
   grid-gap: 12px;
-  background: burlywood;
+  background: #f7f7f7;
 }
 .main {
   grid-column: 1/13;
@@ -124,5 +130,8 @@ strong {
 #upload-container label:hover {
   cursor: pointer;
   text-decoration: underline;
+}
+.warning{
+  
 }
 </style>

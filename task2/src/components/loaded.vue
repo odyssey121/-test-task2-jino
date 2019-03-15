@@ -5,10 +5,19 @@
         </div>
         <div class="upload-text">
             <strong>Файл загружен</strong>
-          <p>{{file.name}}</p>
+          <p>{{filename}} , {{size}}</p>
         </div>
         <div class="checking">
-            <span> Идёт проверка ...</span>
+            <span v-if="accepted === 'Принято'"
+            class="allow"
+            > {{status}}</span>
+            
+            <span v-else-if="accepted === 'Отклонено'"
+            class="deny"
+            > {{status}}</span>
+
+            <span v-else> {{status}}</span>
+
         </div>
   </div>    
   
@@ -17,12 +26,17 @@
 <script>
 export default {
   name: "loaded",
-  props:{
-      file:{
-          
-          default:{},
-          required:false,
-      }
+  props:['filename','size','accepted'],
+  data () {
+    return{
+        
+    }
+  },
+  computed: {
+    status(){
+      return this.accepted;
+        
+    }
   },
   
 };
@@ -32,10 +46,12 @@ export default {
 <style scoped lang="css">
 .checking{
     margin-left: 100px;
+    line-height: 68px;
 }
 
 .upload-text {
   margin-left: 20px;
+  width: 250px;
 }
 .upload-image {
   margin-top: 6px;
@@ -47,6 +63,15 @@ export default {
 .upload {
   margin-top: 15px;
   display: flex;
+  
+}
+.allow{
+  color:green;
+  font-weight: 800;
+}
+.deny{
+  color:red;
+  font-weight: 800;
 }
 
 </style>

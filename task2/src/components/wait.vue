@@ -4,7 +4,7 @@
               <img src="../image/wait.svg" alt>
         </div>
         <div class="upload-text">
-          <strong>{{file}}</strong>
+          <strong>{{filename}}</strong>
           <p>Пожалуйста подождите, идёт загрузка....</p>
 
         </div>
@@ -15,13 +15,7 @@
 <script>
 export default {
   name: "wait",
-  props:{
-      file:{
-          
-          default:{},
-          required:false,
-      }
-  },
+  props:['filename','size','accepted']
   
 };
 </script>
